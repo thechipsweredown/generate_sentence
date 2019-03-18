@@ -13,18 +13,23 @@ def clean_document(doc):
     tokens = [word for word in tokens if word]
     return tokens
 
-INPUT_LENGTH = 50
+INPUT_LENGTH = 200
 sequences = []
-for f in os.listdir("Train_Full/Doi song"):
-    f1 = open("Train_Full/Doi song/"+f, encoding='utf-16')
-    doc = f1.read()
-    tokens = clean_document(doc)
-
-    for i in range(INPUT_LENGTH + 1, len(tokens)):
-        seq = tokens[i-INPUT_LENGTH-1:i]
-        line = ' '.join(seq)
-        sequences.append(line)
-
+# for f in os.listdir("Train_Full/Doi song"):
+#     f1 = open("Train_Full/Doi song/"+f, encoding='utf-16')
+#     doc = f1.read()
+#     tokens = clean_document(doc)
+#     for i in range(INPUT_LENGTH + 1, len(tokens)):
+#         seq = tokens[i-INPUT_LENGTH-1:i]
+#         line = ' '.join(seq)
+#         sequences.append(line)
+f1 = open("train_harry.txt", encoding='utf-8')
+doc = f1.read()
+tokens = clean_document(doc)
+for i in range(INPUT_LENGTH + 1, len(tokens)):
+    seq = tokens[i - INPUT_LENGTH - 1:i]
+    line = ' '.join(seq)
+    sequences.append(line)
 tokenizer = keras.preprocessing.text.Tokenizer(filters='!"#$%&()*+,-./:;<=>?@[\]^`{|}~ ')
 tokenizer.fit_on_texts(sequences)
 
@@ -40,7 +45,7 @@ seq_length = X.shape[1]
 from keras.models import Sequential
 from keras.layers import Embedding,BatchNormalization,LSTM,Dense,Dropout
 model = Sequential()
-model.add(Embedding(vocab_size, 50, input_length=50))
+model.add(Embedding(vocab_size, 50, input_length=200))
 model.add(BatchNormalization())
 model.add(LSTM(512, return_sequences=True))
 model.add(LSTM(512))
